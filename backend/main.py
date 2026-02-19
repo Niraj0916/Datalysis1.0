@@ -23,7 +23,7 @@ def read_root():
 
 # [NEW] File Upload Endpoint
 from fastapi import File, UploadFile, HTTPException
-from analysis import process_data, calculate_kpis, generate_insights, generate_trends
+from analysis import process_data, calculate_kpis, generate_insights, generate_trends, generate_segments, extract_customers, detect_domain
 import io
 import pandas as pd
 
@@ -47,6 +47,9 @@ async def upload_file(file: UploadFile = File(...)):
         kpis = calculate_kpis(df)
         insights = generate_insights(df, kpis)
         trends = generate_trends(df)
+        segments = generate_segments(df)
+        customers = extract_customers(df)
+        domain = detect_domain(df)
         
         return {
             "status": "success",
@@ -54,7 +57,10 @@ async def upload_file(file: UploadFile = File(...)):
             "data_quality_score": quality_score,
             "kpis": kpis,
             "insights": insights,
-            "trends": trends
+            "trends": trends,
+            "segments": segments,
+            "customers": customers,
+            "domain": domain
         }
         
     except Exception as e:
